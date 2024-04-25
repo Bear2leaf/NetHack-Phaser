@@ -1,5 +1,7 @@
 import { Scene, GameObjects } from 'phaser';
 import { Module as factory } from "../libnh/nethack.js";
+let getted = true;
+let Module: any = undefined;
 function createNethack() {
 
     let winCount = 0;
@@ -20,13 +22,22 @@ function createNethack() {
             case "shim_nh_poskey":
                 return 0; // simulates a mouse click on "exit up the stairs"
             case "shim_getmsghistory":
-                return "123"; // here should only return empty str, wasm not support return char* string;
+                if (getted) {
+                    getted = false;
+                    return "asdfafdasdf";
+                }
+                return ""; // here should only return empty str, wasm not support return char* string;
             default:
                 return 0;
         }
     }
     factory({
+        print: function (text: string) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            console.warn(text);
+        },
         onRuntimeInitialized: function () {
+            Module = this;
             // after the WASM is loaded, add the shim graphics callback function
             this.ccall(
                 "shim_graphics_set_callback", // C function name
@@ -39,6 +50,7 @@ function createNethack() {
     });
 }
 declare const window: Window & { doGraphics: (name: string, ...args: any[]) => any }
+createNethack();
 export class MainMenu extends Scene {
     background: GameObjects.Image;
     logo: GameObjects.Image;
@@ -49,7 +61,6 @@ export class MainMenu extends Scene {
     }
 
     create() {
-        createNethack();
         this.background = this.add.image(512, 384, 'background');
 
         this.logo = this.add.image(512, 300, 'logo');

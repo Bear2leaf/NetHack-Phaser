@@ -240,7 +240,8 @@ extern void curses_init_mesg_history(void);
 extern void curses_teardown_messages(void);
 extern void curses_prev_mesg(void);
 extern void curses_count_window(const char *count_text);
-char *curses_getmsghistory(boolean);
+// void curses_getmsghistory(boolean, const char *);
+char **curses_getmsghistory(boolean);
 void curses_putmsghistory(const char *, boolean);
 
 #endif  /* WINCURS_H */

@@ -443,7 +443,8 @@ extern void hilight_value(Widget);
 extern void swap_fg_bg(Widget);
 extern void set_value(Widget w, const char *new_value);
 /* external declarations */
-extern char *X11_getmsghistory(boolean);
+// extern void X11_getmsghistory(boolean, const char **);
+extern char **X11_getmsghistory(boolean);
 extern void X11_putmsghistory(const char *, boolean);
 extern void X11_init_nhwindows(int *, char **);
 extern void X11_player_selection(void);

@@ -86,7 +86,8 @@ struct window_procs {
 
     void (*win_outrip)(winid, int, time_t);
     void (*win_preference_update)(const char *);
-    char *(*win_getmsghistory)(boolean);
+    // void (*win_getmsghistory)(boolean, const char **);
+    char **(*win_getmsghistory)(boolean);
     void (*win_putmsghistory)(const char *, boolean);
     void (*win_status_init)(void);
     void (*win_status_finish)(void);
@@ -410,7 +411,7 @@ struct chain_procs {
 
     void (*win_outrip)(CARGS, winid, int, time_t);
     void (*win_preference_update)(CARGS, const char *);
-    char *(*win_getmsghistory)(CARGS, boolean);
+    char *(*win_getmsghistory)(CARGS, boolean, const char *);
     void (*win_putmsghistory)(CARGS, const char *, boolean);
     void (*win_status_init)(CARGS);
     void (*win_status_finish)(CARGS);

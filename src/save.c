@@ -1091,7 +1091,7 @@ save_msghistory(NHFILE *nhfp)
         /* ask window port for each message in sequence */
         while ((msg = getmsghistory(init)) != 0) {
             init = FALSE;
-            msglen = Strlen(msg);
+            msglen = Strlen(&msg);
             if (msglen < 1)
                 continue;
             /* sanity: truncate if necessary (shouldn't happen);
@@ -1100,7 +1100,7 @@ save_msghistory(NHFILE *nhfp)
                 msglen = BUFSZ - 1;
             if (nhfp->structlevel) {
                 bwrite(nhfp->fd, (genericptr_t) &msglen, sizeof msglen);
-                bwrite(nhfp->fd, (genericptr_t) msg, msglen);
+                bwrite(nhfp->fd, (genericptr_t) &msg, msglen);
             }
             ++msgcount;
         }

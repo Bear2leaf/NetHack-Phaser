@@ -3640,7 +3640,8 @@ extern boolean genl_can_suspend_no(void);
 extern boolean genl_can_suspend_yes(void);
 extern char genl_message_menu(char, int, const char *) NONNULLARG3;
 extern void genl_preference_update(const char *) NO_NNARGS;
-extern char *genl_getmsghistory(boolean);
+// extern void genl_getmsghistory(boolean, const char **);
+extern char **genl_getmsghistory(boolean);
 extern void genl_putmsghistory(const char *, boolean) NONNULLARG1;
 #ifdef HANGUPHANDLING
 extern void nhwindows_hangup(void);
