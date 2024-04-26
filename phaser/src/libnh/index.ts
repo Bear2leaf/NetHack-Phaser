@@ -15,7 +15,6 @@ export function createNethack(scene: Boot) {
                 console.debug("creating window", args, "returning", win);
                 return win;
             case "shim_yn_function":
-            case "shim_select_menu":
             case "shim_message_menu":
                 return 121; // return 'y' to all questions
             case "shim_nhgetch":
@@ -27,6 +26,9 @@ export function createNethack(scene: Boot) {
                     return "noop";
                 }
                 return ""; // here return empty str to end input
+
+            case "shim_select_menu":
+                return -1;
             default:
                 return 0;
         }

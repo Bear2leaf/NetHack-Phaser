@@ -54,6 +54,9 @@ export class Boot extends Scene {
             }
             windows.push(type);
         })
+        this.events.on("shim_destory_nhwindow", (index: number) => {
+            windows.splice(index, 1);
+        })
     }
 
     create() {
