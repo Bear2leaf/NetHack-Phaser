@@ -281,8 +281,8 @@ extern void tty_end_screen(void);
 
 extern void genl_outrip(winid, int, time_t);
 
-// extern void tty_getmsghistory(boolean, const char **);
-extern char **tty_getmsghistory(boolean);
+extern void tty_getmsghistory(boolean, const char **);
+// extern char **tty_getmsghistory(boolean);
 extern void tty_putmsghistory(const char *, boolean);
 extern void tty_update_inventory(int);
 extern win_request_info *tty_ctrl_nhwindow(winid, int, win_request_info *);

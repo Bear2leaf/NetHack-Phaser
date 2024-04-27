@@ -1082,27 +1082,31 @@ store_plname_in_file(NHFILE *nhfp)
 staticfn void
 save_msghistory(NHFILE *nhfp)
 {
-    char *msg;
+    const char *msg = malloc(BUFSZ);
     int msgcount = 0, msglen;
     int minusone = -1;
     boolean init = TRUE;
 
     if (perform_bwrite(nhfp)) {
+        getmsghistory(init, &msg);
         /* ask window port for each message in sequence */
-        while ((msg = getmsghistory(init)) != 0) {
+        while (Strlen(msg) != 0) {
             init = FALSE;
-            msglen = Strlen(&msg);
-            if (msglen < 1)
+            msglen = Strlen(msg);
+            if (msglen < 1) {
+                getmsghistory(init, msg);
                 continue;
+            }
             /* sanity: truncate if necessary (shouldn't happen);
                no need to modify msg[] since terminator isn't written */
             if (msglen > BUFSZ - 1)
                 msglen = BUFSZ - 1;
             if (nhfp->structlevel) {
                 bwrite(nhfp->fd, (genericptr_t) &msglen, sizeof msglen);
-                bwrite(nhfp->fd, (genericptr_t) &msg, msglen);
+                bwrite(nhfp->fd, (genericptr_t) msg, msglen);
             }
             ++msgcount;
+            getmsghistory(init, &msg);
         }
         if (nhfp->structlevel)
             bwrite(nhfp->fd, (genericptr_t) &minusone, sizeof (int));

@@ -466,10 +466,10 @@ genl_preference_update(const char *pref UNUSED)
     return;
 }
 
-char **
-// void
-// genl_getmsghistory(boolean init UNUSED, const char **msg UNUSED)
-genl_getmsghistory(boolean init UNUSED)
+// char **
+void
+genl_getmsghistory(boolean init UNUSED, const char **msg UNUSED)
+// genl_getmsghistory(boolean init UNUSED)
 {
     /* window ports can provide
        their own getmsghistory() routine to
@@ -482,8 +482,8 @@ genl_getmsghistory(boolean init UNUSED)
        with the most recent.
        Return null pointer when finished.
      */
-    // return;
-    return (char **) 0;
+    return;
+    // return (char **) 0;
 }
 
 void
@@ -617,8 +617,8 @@ static void (*previnterface_exit_nhwindows)(const char *) = 0;
 void
 nhwindows_hangup(void)
 {
-    // void (*previnterface_getmsghistory)(boolean, const char **) = 0;
-    char **(*previnterface_getmsghistory)(boolean) = 0;
+    void (*previnterface_getmsghistory)(boolean, const char **) = 0;
+    // char **(*previnterface_getmsghistory)(boolean) = 0;
 
 #ifdef ALTMETA
     /* command processor shouldn't look for 2nd char after seeing ESC */

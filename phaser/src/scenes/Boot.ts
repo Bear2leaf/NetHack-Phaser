@@ -1,7 +1,9 @@
 import { Scene } from 'phaser';
 import { createNethack } from '../libnh/index.ts';
-import { INHWindow, NHWScene, WindowTypes, WindowTypesName } from '../libnh/libnhTypes.ts';
+import { INHWindow, NHCallback, NHWScene, StrAttr, WindowTypes, WindowTypesName, getNHHelpers } from '../libnh/libnhTypes.ts';
 import { NHWMenu } from './NHWMenu.ts';
+import { NHWMap } from './NHWMap.ts';
+import { NHWMessage } from './NHWMessage.ts';
 
 export class Boot extends Scene {
     constructor() {
@@ -16,26 +18,88 @@ export class Boot extends Scene {
     init() {
         createNethack(this);
         const windows: WindowTypes[] = [];
-        this.events.on("shim_start_menu", (index: number) => {
+        this.events.on("shim_start_menu", (resolve: NHCallback, index: number) => {
             this.scene.get<NHWMenu>(WindowTypesName[windows[index]]).startMenu();
+            resolve(0);
         });
-        this.events.on("shim_end_menu", (index: number) => {
+        this.events.on("shim_end_menu", (resolve: NHCallback, index: number) => {
             this.scene.get<NHWMenu>(WindowTypesName[windows[index]]).endMenu();
+            resolve(0);
         });
-        this.events.on("shim_display_nhwindow", (index: number, blocking: boolean) => {
+        this.events.on("shim_select_menu", (resolve: NHCallback, index: number) => {
+            this.scene.get<NHWMenu>(WindowTypesName[windows[index]]).endMenu();
+            resolve(-1);
+        });
+        this.events.on("shim_display_nhwindow", (resolve: NHCallback, index: number, blocking: boolean) => {
             this.scene.get<NHWScene>(WindowTypesName[windows[index]]).display(blocking);
+            resolve(0);
         });
-        this.events.on("shim_clear_nhwindow", (index: number) => {
+        this.events.on("shim_clear_nhwindow", (resolve: NHCallback, index: number) => {
             this.scene.get<NHWScene>(WindowTypesName[windows[index]]).clear();
+            resolve(0);
         });
-        this.events.on("shim_print_glyph", (index: number, coordxyx: number, coordxyy: number, glyphPtr: number, bgglyphPtr: number,) => {
+        this.events.on("shim_cliparound", (resolve: NHCallback, x: number, y: number) => {
+            this.scene.get<NHWMap>(WindowTypesName[WindowTypes.NHW_MAP]).cliparound(x, y);
+            resolve(0);
+        });
+        this.events.on("shim_nh_poskey", (resolve: NHCallback, xPtr: number, yPtr: number) => {
+            const x = getNHHelpers().getPointerValue("", xPtr, 'i');
+            const xx = getNHHelpers().getPointerValue("", x, 'i');
+        });
+        this.events.on("shim_print_glyph", (resolve: NHCallback, index: number, coordxyx: number, coordxyy: number, glyphPtr: number, bgglyphPtr: number,) => {
             // dont know why coordxyx,coordxyy are all same, which is one i32 combined by 2 i16.
             // console.log(x & 0xffff, y >> 16);
             const y = coordxyx & 0xffff;
             const x = coordxyy >> 16;
             this.scene.get<NHWScene>(WindowTypesName[windows[index]]).printGlyph(x, y);
+            resolve(0);
         });
-        this.events.on("shim_create_nhwindow", (type: WindowTypes) => {
+
+        this.events.on("shim_putmsghistory", (resolve: NHCallback, msg: string, restoring: boolean) => {
+            this.scene.get<NHWMessage>(WindowTypesName[WindowTypes.NHW_MESSAGE]).putmsghistory(msg, restoring);
+            resolve(0);
+        });
+        let getted = false;
+        this.events.on("shim_getmsghistory", (resolve: NHCallback, ptr: number, msgPtr: number) => {
+            if (!getted) {
+                const msg = this.scene.get<NHWMessage>(WindowTypesName[WindowTypes.NHW_MESSAGE]).getmsghistory();
+                getted = true;
+                getNHHelpers().setPointerValue("", msgPtr, "s", msg);
+                resolve(0);
+            } else {
+                getNHHelpers().setPointerValue("", msgPtr, "s", "");
+                resolve(0)
+            }
+        });
+        this.events.on("shim_putstr", (resolve: NHCallback, index: number, attr: StrAttr, content: string) => {
+            this.scene.get<NHWScene>(WindowTypesName[windows[index]]).putstr(attr, content);
+            resolve(0);
+        });
+        this.events.on("shim_mark_synch", (resolve: NHCallback) => {
+            resolve(0);
+        });
+        this.events.on("shim_message_menu", (resolve: NHCallback) => {
+            resolve(121);
+        });
+        this.events.on("shim_yn_function", (resolve: NHCallback) => {
+            resolve(121);
+        });
+        this.events.on("shim_player_selection", (resolve: NHCallback) => {
+            resolve(0);
+        });
+        this.events.on("shim_status_init", (resolve: NHCallback) => {
+            resolve(0)
+        })
+        this.events.on("shim_curs", (resolve: NHCallback) => {
+            resolve(0)
+        })
+        this.events.on("shim_status_update", (resolve: NHCallback) => {
+            resolve(0)
+        })
+        this.events.on("shim_init_nhwindows", (resolve: NHCallback) => {
+            resolve(0)
+        })
+        this.events.on("shim_create_nhwindow", (resolve: NHCallback, type: WindowTypes) => {
             switch (type) {
                 case WindowTypes.NHW_MESSAGE:
                     this.scene.start(WindowTypesName[type])
@@ -53,9 +117,11 @@ export class Boot extends Scene {
                     throw new Error("unknown windows type");
             }
             windows.push(type);
+            resolve(windows.length - 1);
         })
-        this.events.on("shim_destory_nhwindow", (index: number) => {
+        this.events.on("shim_destroy_nhwindow", (resolve: NHCallback, index: number) => {
             windows.splice(index, 1);
+            resolve(0);
         })
     }
 

@@ -1,7 +1,10 @@
 
-import {  NHWScene } from '../libnh/libnhTypes.ts';
+import { NHWScene, StrAttr } from '../libnh/libnhTypes.ts';
 
 export class NHWMenu extends NHWScene {
+    putstr(attr: StrAttr, content: string): void {
+        this.displaytext.text += (content) + '\n';
+    }
     printGlyph(x: number, y: number): void {
         throw new Error('Method not implemented.');
     }
@@ -31,7 +34,7 @@ export class NHWMenu extends NHWScene {
         }).setVisible(false);
     }
     create() {
-
+        this.displaytext.text = ""
     }
     update(time: number, delta: number): void {
 

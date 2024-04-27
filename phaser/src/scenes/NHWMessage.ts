@@ -1,6 +1,15 @@
-import { NHWScene } from '../libnh/libnhTypes.ts';
+import { NHWScene, StrAttr } from '../libnh/libnhTypes.ts';
 
 export class NHWMessage extends NHWScene {
+    getmsghistory() {
+        return this.text.text;
+    }
+    putmsghistory(msg: string, restoring: boolean) {
+        this.text.setText(msg);
+    }
+    putstr(attr: StrAttr, content: string): void {
+        throw new Error('Method not implemented.');
+    }
     printGlyph(x: number, y: number): void {
         throw new Error('Method not implemented.');
     }

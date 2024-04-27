@@ -1,4 +1,4 @@
-import { NHWScene } from '../libnh/libnhTypes.ts';
+import { NHWScene, StrAttr } from '../libnh/libnhTypes.ts';
 
 function createCameraController(keyboard: Phaser.Input.Keyboard.KeyboardPlugin, camera: Phaser.Cameras.Scene2D.Camera) {
     camera.setBounds(0, 0, 500, 500);
@@ -18,6 +18,9 @@ function createCameraController(keyboard: Phaser.Input.Keyboard.KeyboardPlugin, 
     return new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);;
 }
 export class NHWMap extends NHWScene {
+    putstr(attr: StrAttr, content: string): void {
+        throw new Error('Method not implemented.');
+    }
     private controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     private text: Phaser.GameObjects.Text;
     private blitter: Phaser.GameObjects.Blitter;
@@ -31,6 +34,9 @@ export class NHWMap extends NHWScene {
         const rect = Phaser.Geom.Rectangle.MergeXY(this.cameras.main.getBounds(), newx, newy);
         this.cameras.main.setBounds(rect.x, rect.y, rect.width, rect.height)
     }
+    cliparound(x: number, y: number) {
+        this.cameras.main.centerOn(x * 20, y * 20);
+    }
     clear(): void {
         this.text.setText("Cleared!")
     }
@@ -42,7 +48,7 @@ export class NHWMap extends NHWScene {
             color: "#fff"
         }).setVisible(false);
 
-        this.blitter = this.add.blitter(100, 0, 'boat');
+        this.blitter = this.add.blitter(0, 0, 'boat');
         this.controls = createCameraController(this.input.keyboard!, this.cameras.main)
 
     }
