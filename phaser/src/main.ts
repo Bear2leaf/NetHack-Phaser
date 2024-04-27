@@ -4,6 +4,7 @@ import { NHWMenu } from './scenes/NHWMenu.ts';
 import { NHWMessage } from './scenes/NHWMessage.ts';
 
 import { Game, Types } from "phaser";
+import { NHWRaw } from './scenes/NHWRAW.ts';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -19,7 +20,8 @@ const config: Types.Core.GameConfig = {
         Boot,
         NHWMessage,
         NHWMap,
-        NHWMenu
+        NHWMenu,
+        NHWRaw
     ]
 };
 

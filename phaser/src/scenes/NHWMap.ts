@@ -1,4 +1,4 @@
-import { NHWScene, StrAttr } from '../libnh/libnhTypes.ts';
+import { NHCallback, NHWScene, StrAttr } from '../libnh/libnhTypes.ts';
 
 function createCameraController(keyboard: Phaser.Input.Keyboard.KeyboardPlugin, camera: Phaser.Cameras.Scene2D.Camera) {
     camera.setBounds(0, 0, 500, 500);
@@ -18,6 +18,16 @@ function createCameraController(keyboard: Phaser.Input.Keyboard.KeyboardPlugin, 
     return new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);;
 }
 export class NHWMap extends NHWScene {
+    nhPosKey(resolve: NHCallback) {
+        this.input.keyboard?.once("keydown", (event: any) => {
+            resolve(event.key.charCodeAt(0))
+        })
+    }
+    ynFunction(resolve: NHCallback) {
+        this.input.keyboard?.once("keydown", (event: any) => {
+            resolve(event.key.charCodeAt(0))
+        })
+    }
     putstr(attr: StrAttr, content: string): void {
         throw new Error('Method not implemented.');
     }

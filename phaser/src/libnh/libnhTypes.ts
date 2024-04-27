@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 
 export enum WindowTypes {
-    NOOP,
+    RAW,
     NHW_MESSAGE,	// (top line)
     NHW_STATUS,	// (top line)
     NHW_MAP,		// (main dungeon)
@@ -18,6 +18,7 @@ export enum StrAttr {
     ATR_INVERSE,
 }
 export enum WindowTypesName {
+    Raw = WindowTypes.RAW,
     NHWMessage = WindowTypes.NHW_MESSAGE,
     NHWMap = WindowTypes.NHW_MAP,
     NHWMenu = WindowTypes.NHW_MENU,
